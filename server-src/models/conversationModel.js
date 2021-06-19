@@ -43,12 +43,19 @@ const conversationModel = mongoose.Schema({
 }, { minimize: false })
 
 conversationModel.statics = {
-    createConversation: async function (users) {
+    createConversation: async function (users, inform) {
         try {
             let newConversation = new this({
                 _id: new mongoose.Types.ObjectId,
                 users: users,
-                messages: [],
+                messages: [{
+                    messageType: 'inform',
+                    message: inform,
+                    messageExt: '',
+                    from: users[0].username,
+                    fromId: users[0].userId,
+                    sent: Date.now()
+                }],
                 seen: []
             })
             await newConversation.save();
