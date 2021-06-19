@@ -40,7 +40,8 @@ export default {
                 this.$store.dispatch('user/getFriends', data)
             })
             this.$socket.on('joinConversation', (data) => {
-                this.$socket.emit('joinConversation', data)
+                this.$socket.emit('joinConversation', data);
+                this.$store.dispatch('user/getGroups', {fromId: this.userId});
             })
         })
     },
