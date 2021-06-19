@@ -187,7 +187,7 @@ module.exports.initIo = (httpsServer) => {
 
 module.exports.getIo = () => {
     if (!io) {
-        throw Error("io not initilized.")
+        throw Error("io is not initialized.")
     } else {
         return io;
     }
