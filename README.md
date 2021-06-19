@@ -1,2 +1,2 @@
 # project-2
-This is the way
+This is another way
