@@ -168,7 +168,6 @@ const actions = {
             return false;
         } else {
             commit('conversation/UPDATE_USERS', response.data.conversation.users, { root: true });
-            commit('conversation/UPDATE_MESSAGES', response.data.conversation.messages, { root: true });
             commit('conversation/UPDATE_SEEN', response.data.conversation.seen, { root: true });
             return true;
         }
