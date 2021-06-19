@@ -14,7 +14,7 @@ module.exports = {
                 userId: req.body.fromId,
                 username: req.body.from,
                 joint: date
-            }]);
+            }], req.body.from + ' create group ' + req.body.groupName);
             if (!fs.existsSync(path.resolve('server-src/conversations/' + newConversation._id))) {
                 fs.mkdir(path.resolve('server-src/conversations/' + newConversation._id), (error) => {
                     if (error) {
@@ -44,6 +44,15 @@ module.exports = {
         try {
             const session = await mongoose.startSession();
             session.startTransaction();
+            var date = Date.now();
+            var informMessage = {
+                messageType: 'inform',
+                message: req.body.from + ' leaved',
+                messageExt: '',
+                sent: date,
+                fromId: req.body.fromId,
+                from: req.body.from
+            }
             let [user, conversation] = await Promise.all([
                 User.findByIdAndUpdate(req.body.fromId, {
                     $pull: {
@@ -60,7 +69,11 @@ module.exports = {
                         }
                     }
                 }),
-                Conversation.findById(req.body.conversationId)
+                Conversation.findByIdAndUpdate(req.body.conversationId, {
+                    $push: {
+                        messages: informMessage
+                    }
+                })
             ]);
             if (!conversation) {
                 res.send({ success: true })
@@ -84,6 +97,12 @@ module.exports = {
                 })
             }
             session.endSession();
+            req.app.io.to('room-' + conversation._id).emit('groupMemberUpdate', {
+                fromId: req.body.fromId,
+                conversationId: req.body.conversationId,
+                informMessage: informMessage,
+                members: conversation.users
+            });
             res.send({ success: true, conversationId: conversation._id });
         } catch (error) {
             console.log(error);
@@ -124,7 +143,7 @@ module.exports = {
                     }
                 }, { new: true })
             ])
-            req.app.io.to('room-' + req.body.conversationId).emit('newGroupMember', {
+            req.app.io.to('room-' + req.body.conversationId).emit('groupMemberUpdate', {
                 fromId: req.body.fromId,
                 conversationId: req.body.conversationId,
                 informMessage: informMessage,
