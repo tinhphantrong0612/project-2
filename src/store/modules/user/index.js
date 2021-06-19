@@ -12,8 +12,10 @@ const state = {
     created: Date.now()
 };
 const actions = {
-    async userInitiate({ commit }) {
+    async getUserInfo({ commit }) {
+        commit("view/UPDATE_LOADING", true, { root: true });
         let response = await axios.get('/api/user/userInfo');
+        commit("view/UPDATE_LOADING", false, { root: true });
         if (!response.data.success) {
             localStorage.removeItem('token');
             commit("CLEAR_STATE");
@@ -73,9 +75,9 @@ const actions = {
             return true;
         }
     },
-    async acceptFriendRequest({ commit }, payload) {
+    async cancelFriendRequest({ commit }, payload) {
         commit("view/UPDATE_LOADING", true, { root: true });
-        let response = await axios.post('/api/friend/accept', payload);
+        let response = await axios.post('/api/friend/cancel', payload);
         commit('view/UPDATE_LOADING', false, { root: true });
         if (!response.data.success) {
             return false;
@@ -83,9 +85,9 @@ const actions = {
             return true;
         }
     },
-    async cancelFriendRequest({ commit }, payload) {
+    async acceptFriendRequest({ commit }, payload) {
         commit("view/UPDATE_LOADING", true, { root: true });
-        let response = await axios.post('/api/friend/cancel', payload);
+        let response = await axios.post('/api/friend/accept', payload);
         commit('view/UPDATE_LOADING', false, { root: true });
         if (!response.data.success) {
             return false;
