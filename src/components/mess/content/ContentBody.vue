@@ -90,7 +90,7 @@ export default {
                     conversationId: this.conversationId,
                 })
             })
-            this.$socket.on('newGroupMember', (data) => {
+            this.$socket.on('groupMemberUpdate', (data) => {
                 if (data.conversationId == this.conversationId && data.fromId != this.userId) {
                     this.$store.dispatch(
                         'conversation/addMessage',
