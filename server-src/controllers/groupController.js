@@ -150,7 +150,10 @@ module.exports = {
                 members: conversation.users
             })
             req.app.io.to('room-' + req.body.toId).emit('joinConversation', req.body.conversationId);
-            res.send({ success: true, conversation });
+            res.send({ success: true, conversation: {
+                users: conversation.users,
+                seen: conversation.seen
+            } });
             session.endSession();
         } catch (error) {
             console.log(error);
