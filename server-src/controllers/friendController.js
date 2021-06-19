@@ -50,7 +50,7 @@ module.exports = {
                 userId: req.body.toId,
                 username: req.body.to,
                 joint: date
-            }]);
+            }], req.body.from + ' accepted request from ' + req.body.to);
             if (!fs.existsSync(path.resolve('server-src/conversations/' + newConversation._id))) {
                 fs.mkdir(path.resolve('server-src/conversations/' + newConversation._id), (error) => {
                     if (error) {
