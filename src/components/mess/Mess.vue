@@ -31,7 +31,7 @@ export default {
         this.$connectSocket()
     },
     async created() {
-        let result = await this.$store.dispatch('user/userInitiate')
+        let result = await this.$store.dispatch('user/getUserInfo');
         if (result == 'FAILED') this.$router.push({ path: '/login' })
         else if (result != 'NO_LAST_CONTACT')
             this.$store.dispatch('conversation/getConversation', {
