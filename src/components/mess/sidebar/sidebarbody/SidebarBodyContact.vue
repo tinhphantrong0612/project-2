@@ -55,6 +55,9 @@ export default {
         userId() {
             return this.$store.getters['user/userId']
         },
+        username() {
+            return this.$store.getters['user/username']
+        },
         sentRequests() {
             return this.$store.getters['user/sentRequests']
         },
@@ -107,8 +110,8 @@ export default {
                 } else {
                     this.$socket.emit('seen', {
                         conversationId: this.user.conversationId,
-                        userId: this.$store.getters['user/userId'],
-                        username: this.$store.getters['user/username'],
+                        userId: this.userId,
+                        username: this.username,
                     })
                 }
             }

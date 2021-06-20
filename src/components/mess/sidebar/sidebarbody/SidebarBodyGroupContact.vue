@@ -65,8 +65,8 @@ export default {
             } else {
                 this.$socket.emit('seen', {
                     conversationId: this.group.conversationId,
-                    userId: this.$store.getters['user/userId'],
-                    username: this.$store.getters['user/username'],
+                    userId: this.userId,
+                    username: this.$store.username,
                 })
             }
         },

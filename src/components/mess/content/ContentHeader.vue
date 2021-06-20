@@ -451,7 +451,7 @@ export default {
                     }
                     this.$socket.emit('answer', {
                         from: this.userId,
-                        to: this.$store.getters['view/callee'].userId,
+                        to: this.callee.userId,
                         description: sessionDescription,
                     })
                 },
