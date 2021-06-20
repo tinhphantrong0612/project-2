@@ -117,7 +117,6 @@ export default {
                     userId: this.userId,
                     username: this.username,
                 })
-                this.$emitter.emit('discardModal')
             }
         },
     },

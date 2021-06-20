@@ -64,7 +64,7 @@ export default {
             this.$socket.emit('online', this.userId)
         },
         onUnfriend(data) {
-            if (data.fromId == this.otherId) {
+            if (data.fromId == this.otherId || data.toId == this.otherId) {
                 this.$store.dispatch('user/beingUnfriend')
                 this.$socket.emit('emptyLastContact', this.userId)
             }

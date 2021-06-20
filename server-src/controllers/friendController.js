@@ -9,27 +9,30 @@ module.exports = {
         try {
             const session = await mongoose.startSession();
             session.startTransaction();
-            await User.findOneAndUpdate({ _id: req.body.fromId, 'friends.userId': { $ne: req.body.toId }, 'sentRequests.userId': { $ne: req.body.toId }, 'receivedRequests.userId': { $ne: req.body.toId } }, {
-                $push: {
-                    sentRequests: {
-                        userId: req.body.toId,
-                        username: req.body.to,
-                        sent: Date.now()
+            let [from, to] = await Promise.allSettled([
+                User.findOneAndUpdate({ _id: req.body.fromId, 'friends.userId': { $ne: req.body.toId }, 'sentRequests.userId': { $ne: req.body.toId }, 'receivedRequests.userId': { $ne: req.body.toId } }, {
+                    $push: {
+                        sentRequests: {
+                            userId: req.body.toId,
+                            username: req.body.to,
+                            sent: Date.now()
+                        }
                     }
-                }
-            })
-            await User.findOneAndUpdate({ _id: req.body.toId, 'friends.userId': { $ne: req.body.fromId }, 'sentRequests.userId': { $ne: req.body.fromId }, 'receivedRequests.userId': { $ne: req.body.fromId } }, {
-                $push: {
-                    receivedRequests: {
-                        userId: req.body.fromId,
-                        username: req.body.from,
-                        received: Date.now()
+                }, { new: true }),
+                User.findOneAndUpdate({ _id: req.body.toId, 'friends.userId': { $ne: req.body.fromId }, 'sentRequests.userId': { $ne: req.body.fromId }, 'receivedRequests.userId': { $ne: req.body.fromId } }, {
+                    $push: {
+                        receivedRequests: {
+                            userId: req.body.fromId,
+                            username: req.body.from,
+                            received: Date.now()
+                        }
                     }
-                }
-            })
+                })
+            ])
             session.endSession();
             res.send({
-                success: true
+                success: true,
+                sentRequests: from.value.sentRequests
             })
             req.app.io.to('room-' + req.body.fromId).to('room-' + req.body.toId).emit('updateRequests');
         } catch (error) {
@@ -59,7 +62,7 @@ module.exports = {
                     }
                 });
             }
-            await Promise.allSettled([
+            let [from, to] = await Promise.allSettled([
                 User.findOneAndUpdate({ _id: req.body.fromId, 'friends.userId': { $ne: req.body.toId }, 'sentRequests.userId': { $ne: req.body.toId } }, {
                     $push: {
                         friends: {
@@ -73,7 +76,7 @@ module.exports = {
                             userId: req.body.toId
                         }
                     }
-                }),
+                }, { new: true }),
                 User.findOneAndUpdate({ _id: req.body.toId, 'friends.userId': { $ne: req.body.fromId }, 'receivedRequests.userId': { $ne: req.body.fromId } }, {
                     $push: {
                         friends: {
@@ -90,7 +93,9 @@ module.exports = {
                 })])
             session.endSession();
             res.send({
-                success: true
+                success: true,
+                receivedRequests: from.value.receivedRequests,
+                friends: from.value.friends
             })
             req.app.io.to('room-' + req.body.fromId).to('room-' + req.body.toId).emit('updateFriends', newConversation._id);
         } catch (error) {
@@ -102,14 +107,14 @@ module.exports = {
         try {
             const session = await mongoose.startSession();
             session.startTransaction();
-            await Promise.allSettled([
+            let [from, to] = await Promise.allSettled([
                 User.findOneAndUpdate({ _id: req.body.fromId, 'friends.userId': { $ne: req.body.toId }, 'sentRequests.userId': req.body.toId, 'receivedRequests.userId': { $ne: req.body.toId } }, {
                     $pull: {
                         sentRequests: {
                             userId: req.body.toId
                         }
                     }
-                }),
+                }, { new: true }),
                 User.findOneAndUpdate({ _id: req.body.toId, 'friends.userId': { $ne: req.body.fromId }, 'sentRequests.userId': { $ne: req.body.fromId }, 'receivedRequests.userId': req.body.fromId }, {
                     $pull: {
                         receivedRequests: {
@@ -119,7 +124,8 @@ module.exports = {
                 })])
             session.endSession();
             res.send({
-                success: true
+                success: true,
+                sentRequests: from.value.sentRequests
             })
             req.app.io.to('room-' + req.body.fromId).to('room-' + req.body.toId).emit('updateRequests');
         } catch (error) {
@@ -131,14 +137,14 @@ module.exports = {
         try {
             const session = await mongoose.startSession();
             session.startTransaction();
-            await Promise.allSettled([
+            let [from, to] = await Promise.allSettled([
                 User.findOneAndUpdate({ _id: req.body.fromId, 'friends.userId': { $ne: req.body.toId }, 'sentRequests.userId': { $ne: req.body.toId }, 'receivedRequests.userId': req.body.toId }, {
                     $pull: {
                         receivedRequests: {
                             userId: req.body.toId
                         }
                     }
-                }),
+                }, { new: true }),
                 User.findOneAndUpdate({ _id: req.body.toId, 'friends.userId': { $ne: req.body.fromId }, 'sentRequests.userId': req.body.fromId, 'receivedRequests.userId': { $ne: req.body.fromId } }, {
                     $pull: {
                         sentRequests: {
@@ -147,7 +153,8 @@ module.exports = {
                     }
                 })])
             res.send({
-                success: true
+                success: true,
+                receivedRequests: from.value.receivedRequests
             })
             req.app.io.to('room-' + req.body.fromId).to('room-' + req.body.toId).emit('updateRequests');
             session.endSession();
@@ -160,7 +167,7 @@ module.exports = {
         try {
             const session = await mongoose.startSession();
             session.startTransaction();
-            await Promise.allSettled([
+            let [from, to] = await Promise.allSettled([
                 User.findByIdAndUpdate(req.body.fromId, {
                     $pull: {
                         friends: {
@@ -175,7 +182,7 @@ module.exports = {
                             conversationId: null
                         }
                     }
-                }),
+                }, { new: true }),
                 User.findByIdAndUpdate(req.body.toId, {
                     $pull: {
                         friends: {
@@ -192,7 +199,7 @@ module.exports = {
             if (fs.existsSync(path.resolve('server-src/conversations/' + req.body.conversationId))) {
                 fs.rmdirSync(path.resolve('server-src/conversations/' + req.body.conversationId), { recursive: true });
             }
-            res.send({ success: true })
+            res.send({ success: true, friends: from.value.friends })
             session.endSession();
         } catch (error) {
             console.log(error);

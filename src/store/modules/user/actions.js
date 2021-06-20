@@ -58,6 +58,7 @@ const actions = {
         if (!response.data.success) {
             return false;
         } else {
+            commit('UPDATE_SENTREQUESTS', response.data.sentRequests)
             return true;
         }
     },
@@ -68,6 +69,7 @@ const actions = {
         if (!response.data.success) {
             return false;
         } else {
+            commit('UPDATE_RECEIVEDREQUESTS', response.data.sentRequests)
             return true;
         }
     },
@@ -78,6 +80,8 @@ const actions = {
         if (!response.data.success) {
             return false;
         } else {
+            commit('UPDATE_FRIENDS', response.data.friends)
+            commit('UPDATE_RECEIVEDREQUESTS', response.data.receivedRequests)
             return true;
         }
     },
@@ -88,6 +92,7 @@ const actions = {
         if (!response.data.success) {
             return false;
         } else {
+            commit('UPDATE_RECEIVEDREQUESTS', response.data.receivedRequests)
             return true;
         }
     },
@@ -99,6 +104,7 @@ const actions = {
             return;
         } else {
             if (payload.conversationId == rootGetters['conversation/conversationId']) commit('conversation/CLEAR_STATE', null, { root: true });
+            commit('UPDATE_FRIENDS', response.data.friends)
             return;
         }
     },
@@ -129,6 +135,7 @@ const actions = {
         if (!response.data.success) {
             return false;
         } else {
+            commit("UPDATE_GROUPS", response.data.groups)
             return true;
         }
     },
@@ -139,6 +146,7 @@ const actions = {
         if (!response.data.success) {
             return false;
         } else {
+            commit("UPDATE_GROUPS", response.data.groups)
             if (payload.conversationId == rootGetters['conversation/conversationId']) commit('conversation/CLEAR_STATE', null, { root: true });
             return true;
         }

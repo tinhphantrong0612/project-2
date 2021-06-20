@@ -20,20 +20,50 @@
                     </p>
                 </div>
             </div>
-            <div class="d-flex m-auto col-4 justify-content-evenly">
+            <div class="d-flex m-auto col-4 justify-content-start">
                 <button
                     type="button"
-                    class="btn btn-primary"
+                    class="btn btn-primary mr-1"
                     @click="openConversation()"
                 >
-                    Open
+                    <p class="d-sm-flex m-0 d-none">Open</p>
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        fill="currentColor"
+                        class="bi bi-box-arrow-in-right d-sm-none d-flex"
+                        viewBox="0 0 16 16"
+                    >
+                        <path
+                            fill-rule="evenodd"
+                            d="M6 3.5a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-2a.5.5 0 0 0-1 0v2A1.5 1.5 0 0 0 6.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-8A1.5 1.5 0 0 0 5 3.5v2a.5.5 0 0 0 1 0v-2z"
+                        />
+                        <path
+                            fill-rule="evenodd"
+                            d="M11.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H1.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z"
+                        />
+                    </svg>
                 </button>
                 <button
                     type="button"
                     class="btn btn-danger"
                     @click="unfriend()"
                 >
-                    Unfriend
+                    <p class="d-sm-flex m-0 d-none">Unfriend</p>
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        fill="currentColor"
+                        class="bi bi-person-x-fill d-sm-none d-flex"
+                        viewBox="0 0 16 16"
+                    >
+                        <path
+                            fill-rule="evenodd"
+                            d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm6.146-2.854a.5.5 0 0 1 .708 0L14 6.293l1.146-1.147a.5.5 0 0 1 .708.708L14.707 7l1.147 1.146a.5.5 0 0 1-.708.708L14 7.707l-1.146 1.147a.5.5 0 0 1-.708-.708L13.293 7l-1.147-1.146a.5.5 0 0 1 0-.708z"
+                        />
+                    </svg>
                 </button>
             </div>
         </div>
@@ -53,13 +83,13 @@ export default {
         },
         conversationId() {
             return this.$store.getters['conversation/conversationId']
-        }
+        },
     },
     methods: {
         async openConversation() {
             if (this.conversationId === this.friend.conversationId) {
-                this.$emitter.emit('discardModal');
-                return;
+                this.$emitter.emit('discardModal')
+                return
             }
             let response = await this.$store.dispatch(
                 'conversation/getConversation',
@@ -80,7 +110,6 @@ export default {
                     userId: this.$store.getters['user/userId'],
                     username: this.$store.getters['user/username'],
                 })
-                this.$emitter.emit('discardModal');
             }
         },
         async unfriend() {
@@ -89,6 +118,7 @@ export default {
                 from: this.username,
                 to: this.friend.username,
                 toId: this.friend.userId,
+                conversationId: this.friend.conversationId
             })
             this.$store.dispatch('user/getFriends')
         },
@@ -120,5 +150,8 @@ export default {
     margin-top: 0;
     font-size: 1.5rem;
     color: wheat;
+}
+button {
+    padding: 0.375rem;
 }
 </style>

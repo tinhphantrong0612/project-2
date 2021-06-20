@@ -34,7 +34,7 @@ module.exports = {
             });
             req.app.io.to('room-' + user._id).emit('joinConversation', newConversation._id);
             session.endSession();
-            res.send({ success: true });
+            res.send({ success: true, groups: user.groups });
         } catch (error) {
             console.log(error);
             res.status(500).send({ success: false, error: "Internal Service Error!" });
@@ -73,7 +73,7 @@ module.exports = {
                     $push: {
                         messages: informMessage
                     }
-                })
+                }, {new: true})
             ]);
             if (!conversation) {
                 res.send({ success: true })
@@ -103,7 +103,7 @@ module.exports = {
                 informMessage: informMessage,
                 members: conversation.users
             });
-            res.send({ success: true, conversationId: conversation._id });
+            res.send({ success: true, conversationId: conversation._id, groups: user.groups });
         } catch (error) {
             console.log(error);
             res.status(500).send({ success: false, error: "Internal Service Error!" });

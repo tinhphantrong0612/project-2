@@ -2,7 +2,7 @@
     <div>
         <router-view></router-view>
         <div
-            class="modal-backdrop fade"
+            class="modal-backdrop fade root-loading"
             :class="{ 'd-block show': loading, 'd-none': !loading }"
         >
             <div class="d-flex justify-content-center text-white">
@@ -52,5 +52,9 @@ button:hover {
 .modal-dialog {
     max-width: 500px !important;
     min-width: 300px !important;
+}
+
+.modal-backdrop.root-loading {
+    z-index: 1100 !important;
 }
 </style>

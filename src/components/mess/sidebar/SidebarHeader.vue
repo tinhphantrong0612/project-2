@@ -58,8 +58,8 @@ export default {
         },
     },
     methods: {
-        onSearch(searchName) {
-            this.$store.dispatch('user/search', searchName)
+        async onSearch(searchName) {
+            await this.$store.dispatch('user/search', searchName)
         },
     },
 }

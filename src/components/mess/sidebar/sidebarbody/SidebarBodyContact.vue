@@ -39,10 +39,6 @@ export default {
     props: ['user'],
     data() {
         return {
-            IS_FRIEND: 0,
-            IS_SENT: 1,
-            IS_RECEIVED: 2,
-            IS_OTHER: 3,
         }
     },
     computed: {
@@ -63,7 +59,7 @@ export default {
         },
         receivedRequests() {
             return this.$store.getters['user/receivedRequests']
-        }
+        },
     },
     methods: {
         checkFriendRequest(userId) {
@@ -73,11 +69,14 @@ export default {
             let inSentRequests = this.sentRequests.findIndex(
                 (friend) => friend.userId == userId
             )
-            let inReceivedRequests = this.receivedRequests.findIndex((friend) => friend.userId == userId)
-            if (inFriends != -1) return this.IS_FRIEND
-            else if (inSentRequests != -1) return this.IS_SENT
-            else if (inReceivedRequests != -1) return this.IS_RECEIVED
-            else return this.IS_OTHER
+            let inReceivedRequests = this.receivedRequests.findIndex(
+                (friend) => friend.userId == userId
+            )
+            return {
+                inFriends,
+                inSentRequests,
+                inReceivedRequests,
+            }
         },
         async accessContact() {
             let checkFriendRequestResult = this.checkFriendRequest(
@@ -87,17 +86,13 @@ export default {
                 username: this.user.username,
                 userId: this.user.userId,
             })
-            if (checkFriendRequestResult == this.IS_OTHER) {
-                this.$emitter.emit('toggleModal', 'send')
-            } else if (checkFriendRequestResult == this.IS_RECEIVED) {
-                this.$emitter.emit('toggleModal', 'received')
-            } else if (checkFriendRequestResult == this.IS_SENT) {
-                this.$emitter.emit('toggleModal', 'sent')
-            } else if (checkFriendRequestResult == this.IS_FRIEND) {
+            if (checkFriendRequestResult.inFriends !== -1) {
                 let response = await this.$store.dispatch(
                     'conversation/getConversation',
                     {
-                        conversationId: this.user.conversationId,
+                        conversationId:
+                            this.friends[checkFriendRequestResult.inFriends]
+                                .conversationId,
                         name: this.user.username,
                         Id: this.user.userId,
                         userId: this.userId,
@@ -109,11 +104,19 @@ export default {
                     this.$emitter.emit('toggleModal', 'failed')
                 } else {
                     this.$socket.emit('seen', {
-                        conversationId: this.user.conversationId,
+                        conversationId:
+                            this.friends[checkFriendRequestResult.inFriends]
+                                .conversationId,
                         userId: this.userId,
                         username: this.username,
                     })
                 }
+            } else if (checkFriendRequestResult.inReceivedRequests !== -1) {
+                this.$emitter.emit('toggleModal', 'received')
+            } else if (checkFriendRequestResult.inSentRequests !== -1) {
+                this.$emitter.emit('toggleModal', 'sent')
+            } else {
+                this.$emitter.emit('toggleModal', 'send')
             }
         },
     },
