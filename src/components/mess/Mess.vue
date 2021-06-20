@@ -35,7 +35,14 @@ export default {
         if (result == 'FAILED') {
             localStorage.removeItem('token')
             this.$router.push({ path: '/login' })
-        } else if (result != 'NO_LAST_CONTACT') this.getConversation(result)
+        } else if (result != 'NO_LAST_CONTACT') {
+            await this.getConversation(result)
+            this.$socket.emit('seen', {
+                conversationId: result.conversationId,
+                userId: this.userId,
+                username: this.username
+            })
+        }
 
         this.$socket.on('connect', () => {
             this.$socket.emit('init', this.userId)
@@ -66,6 +73,9 @@ export default {
         userId() {
             return this.$store.getters['user/userId']
         },
+        username() {
+            return this.$store.getters['user/username']
+        },
         width() {
             return this.$store.getters['view/witdh']
         },
@@ -74,6 +84,7 @@ export default {
         },
     },
     mounted() {
+        this.onResize();
         this.$nextTick(function () {
             window.addEventListener('resize', this.onResize)
         })
@@ -89,6 +100,8 @@ export default {
     methods: {
         onResize() {
             this.$store.dispatch('view/onResize')
+            let vh = window.innerHeight * 0.01;
+            document.documentElement.style.setProperty('--vh', `${vh}px`)
         },
         onFriendStatus(status, friendId) {
             this.$store.dispatch('user/setFriendStatus', { status, friendId })

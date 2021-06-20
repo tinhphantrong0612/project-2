@@ -25,6 +25,7 @@ export default {
     padding: 0px !important;
     border-right: 0px;
     max-height: 100%;
+    overflow: hidden;
     width: 65%;
     z-index: 0;
 }

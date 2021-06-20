@@ -56,6 +56,11 @@ module.exports = {
         }
     },
     onLogout: async (req, res) => {
+        await User.findByIdAndUpdate(req.session.userId, {
+            $set: {
+                status: 'offline'
+            }
+        })
         delete req.session.userId
         res.send({
             success: true

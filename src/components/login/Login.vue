@@ -266,7 +266,6 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
 export default {
     name: 'Login',
     data() {
@@ -363,5 +362,9 @@ export default {
 ::-webkit-scrollbar-thumb {
     background: #252a36;
     border-radius: 10px;
+}
+
+button {
+    padding: 0.375rem;
 }
 </style>

@@ -36,6 +36,7 @@
                 results="5"
                 maxlength="14"
                 @keypress.enter="onSearch(searchName)"
+                @input="checkSearchNameEmpty()"
             />
         </div>
     </div>
@@ -61,6 +62,9 @@ export default {
         async onSearch(searchName) {
             await this.$store.dispatch('user/search', searchName)
         },
+        checkSearchNameEmpty() {
+            if (this.searchName === '') this.onSearch(this.searchName)
+        }
     },
 }
 </script>

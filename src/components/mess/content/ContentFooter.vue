@@ -1,5 +1,5 @@
 <template>
-    <div class="content-footer d-flex" :class="{ file: file }">
+    <div class="content-footer d-block" :class="{ file: file }">
         <div
             class="blob-image-wrapper"
             :class="{ 'd-block': file, 'd-none': !file }"
@@ -152,12 +152,16 @@ export default {
                 })
                 this.message = ''
             }
+            this.clearSeen();
             if (this.file) {
                 this.sendFileMessage(this.fileType);
             }
         },
         chooseFile() {
             this.$refs.fileUpload.click()
+        },
+        clearSeen() {
+            this.$store.dispatch('conversation/updateSeen', []);
         },
         readFile() {
             this.file = this.$refs.fileUpload.files[0]
@@ -248,7 +252,6 @@ export default {
     .content-footer {
         position: fixed;
         bottom: 0;
-        margin-top: 50px;
         border-top: 1px #3d4559 solid;
         width: 100%;
     }

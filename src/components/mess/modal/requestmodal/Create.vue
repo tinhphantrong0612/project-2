@@ -2,7 +2,7 @@
     <div class="modal-content">
         <div class="modal-header">
             <h5 class="modal-title" id="requestModal">
-                Received Friend Request
+                Create Group
             </h5>
             <button
                 type="button"
