@@ -135,6 +135,7 @@ export default {
         top: 60px;
         border-top: 1px #3d4559 solid;
         width: 100%;
+        z-index: 0;
     }
 }
 

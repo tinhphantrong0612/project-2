@@ -150,6 +150,7 @@ export default {
         border-top: 1px #3d4559 solid;
         width: 35%;
         min-width: 300px;
+        z-index: 1;
     }
 }
 

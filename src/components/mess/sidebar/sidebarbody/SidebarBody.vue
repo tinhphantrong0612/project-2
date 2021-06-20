@@ -97,9 +97,11 @@ export default {
     .sidebar-body {
         position: fixed;
         top: 165px;
+        bottom: 50px;
         border-top: 1px #3d4559 solid;
         width: 35%;
         min-width: 300px;
+        z-index: 0;
     }
 }
 </style>

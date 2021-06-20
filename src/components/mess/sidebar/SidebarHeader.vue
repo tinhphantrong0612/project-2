@@ -82,6 +82,7 @@ export default {
         top: 0;
         width: 35%;
         min-width: 300px;
+        z-index: 1;
     }
 }
 
