@@ -31,7 +31,7 @@ module.exports = {
             res.send({
                 success: true
             })
-            req.app.io.to('room-' + req.body.fromId).to('room-' + req.body.toId).emit('updateRequest');
+            req.app.io.to('room-' + req.body.fromId).to('room-' + req.body.toId).emit('updateRequests');
         } catch (error) {
             console.log("Send error: " + error);
             res.status(500).send({ success: false, error: error })
@@ -121,7 +121,7 @@ module.exports = {
             res.send({
                 success: true
             })
-            req.app.io.to('room-' + req.body.fromId).to('room-' + req.body.toId).emit('updateRequest');
+            req.app.io.to('room-' + req.body.fromId).to('room-' + req.body.toId).emit('updateRequests');
         } catch (error) {
             console.log("Cancel request: " + error);
             res.status(500).send({ success: false, error: "Internal Server Error!" })
@@ -149,7 +149,7 @@ module.exports = {
             res.send({
                 success: true
             })
-            req.app.io.to('room-' + req.body.fromId).to('room-' + req.body.toId).emit('updateRequest');
+            req.app.io.to('room-' + req.body.fromId).to('room-' + req.body.toId).emit('updateRequests');
             session.endSession();
         } catch (error) {
             console.log(error);

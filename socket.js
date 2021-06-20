@@ -38,7 +38,7 @@ module.exports.initIo = (httpsServer) => {
 
         socket.on('online', async (userId) => {
             let user = await User.findById(userId);
-            user.friends.forEach((friend) => {
+            if (user) user.friends.forEach((friend) => {
                 socket.to('room-' + friend.userId).emit('online', userId);
             })
         })

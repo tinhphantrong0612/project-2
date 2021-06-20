@@ -23,26 +23,10 @@ export default {
     name: 'SidebarBody',
     created() {
         this.$nextTick(() => {
-            this.$socket.on('updateRequest', () => {
-                this.$store.dispatch('user/updateRequests', this.userId)
-            })
-            this.$socket.on('updateFriends', async (conversationId) => {
-                this.$store.dispatch('user/updateRequests', this.userId)
-                this.$socket.emit('joinConversation', conversationId)
-                await this.$store.dispatch('user/getFriends')
-                this.$socket.emit('online', this.userId)
-            })
-            this.$socket.on('unfriend', (data) => {
-                if (data.fromId == this.otherId) {
-                    this.$store.dispatch('user/beingUnfriend')
-                    this.$socket.emit('emptyLastContact', this.userId)
-                }
-                this.$store.dispatch('user/getFriends', data)
-            })
-            this.$socket.on('joinConversation', (data) => {
-                this.$socket.emit('joinConversation', data);
-                this.$store.dispatch('user/getGroups', {fromId: this.userId});
-            })
+            this.$socket.on('updateRequests', this.onUpdateRequests)
+            this.$socket.on('updateFriends', this.onUpdateFriends)
+            this.$socket.on('unfriend', this.onUnfriend)
+            this.$socket.on('joinConversation', this.onJoinConversation)
         })
     },
     computed: {
@@ -67,6 +51,28 @@ export default {
         },
         otherId() {
             return this.$store.getters['conversation/otherId']
+        },
+    },
+    methods: {
+        onUpdateRequests() {
+            this.$store.dispatch('user/updateRequests', this.userId)
+        },
+        async onUpdateFriends(conversationId) {
+            this.$store.dispatch('user/updateRequests', this.userId)
+            this.$socket.emit('joinConversation', conversationId)
+            await this.$store.dispatch('user/getFriends')
+            this.$socket.emit('online', this.userId)
+        },
+        onUnfriend(data) {
+            if (data.fromId == this.otherId) {
+                this.$store.dispatch('user/beingUnfriend')
+                this.$socket.emit('emptyLastContact', this.userId)
+            }
+            this.$store.dispatch('user/getFriends', data)
+        },
+        onJoinConversation(data) {
+            this.$socket.emit('joinConversation', data)
+            this.$store.dispatch('user/getGroups', { fromId: this.userId })
         },
     },
     components: {

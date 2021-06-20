@@ -25,32 +25,26 @@ export default {
     components: {
         Sidebar,
         Content,
-        RequestModal
+        RequestModal,
     },
     async beforeCreate() {
         this.$connectSocket()
     },
     async created() {
-        let result = await this.$store.dispatch('user/getUserInfo');
-        if (result == 'FAILED') this.$router.push({ path: '/login' })
-        else if (result != 'NO_LAST_CONTACT')
-            this.$store.dispatch('conversation/getConversation', {
-                Id: result.otherId,
-                name: result.otherName,
-                status: '',
-                type: result.otherType,
-                conversationId: result.conversationId,
-                userId: localStorage.getItem('token'),
-            })
+        let result = await this.$store.dispatch('user/getUserInfo')
+        if (result == 'FAILED') {
+            localStorage.removeItem('token')
+            this.$router.push({ path: '/login' })
+        } else if (result != 'NO_LAST_CONTACT') this.getConversation(result)
 
         this.$socket.on('connect', () => {
-            this.$socket.emit('init', this.$store.getters['user/userId'])
+            this.$socket.emit('init', this.userId)
         })
 
         this.$socket.on('online', (friendId) => {
             this.onFriendStatus('online', friendId)
             this.$socket.emit('online-too', {
-                from: this.$store.getters['user/userId'],
+                from: this.userId,
                 to: friendId,
             })
         })
@@ -60,25 +54,24 @@ export default {
         })
 
         this.$socket.on('offline', (friendId) => {
-            this.onFriendStatus('offline', friendId);
+            this.onFriendStatus('offline', friendId)
             if (this.callee.userId == friendId) {
-                this.$emitter.emit('stop');
+                this.$emitter.emit('stop')
             }
         })
 
-        this.$emitter.on('toggleModal', (modalType) => {
-            this.$store.dispatch('view/showRequestModal', modalType)
-            if (modalType != '' && this.$refs.modalToggleButton)
-                this.$refs.modalToggleButton.click()
-        })
+        this.$emitter.on('toggleModal', this.onToggleModal)
     },
     computed: {
+        userId() {
+            return this.$store.getters['user/userId']
+        },
         width() {
             return this.$store.getters['view/witdh']
         },
         callee() {
             return this.$store.getters['view/callee']
-        }
+        },
     },
     mounted() {
         this.$nextTick(function () {
@@ -99,6 +92,21 @@ export default {
         },
         onFriendStatus(status, friendId) {
             this.$store.dispatch('user/setFriendStatus', { status, friendId })
+        },
+        onToggleModal(modalType) {
+            this.$store.dispatch('view/showRequestModal', modalType)
+            if (modalType != '' && this.$refs.modalToggleButton)
+                this.$refs.modalToggleButton.click()
+        },
+        getConversation(result) {
+            this.$store.dispatch('conversation/getConversation', {
+                Id: result.otherId,
+                name: result.otherName,
+                status: '',
+                type: result.otherType,
+                conversationId: result.conversationId,
+                userId: this.userId,
+            })
         },
     },
 }
