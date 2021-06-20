@@ -244,6 +244,15 @@ export default {
     border-bottom: 0px;
 }
 
+@media (max-width: 768px) {
+    .content-footer {
+        position: fixed;
+        bottom: 0;
+        border-top: 1px #3d4559 solid;
+        width: 100%;
+    }
+}
+
 .input-group {
     height: 49px;
 }

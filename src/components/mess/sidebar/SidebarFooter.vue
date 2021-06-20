@@ -1,5 +1,5 @@
 <template>
-    <div class="sidebar-footer row w-100 m-0">
+    <div class="sidebar-footer row m-0">
         <div class="setting-button w-50 h-100 m-0 p-0 dropup">
             <button
                 type="button"
@@ -142,6 +142,15 @@ export default {
     border: #3d4559 solid;
     border-left: 0px;
     border-bottom: 0px;
+}
+@media (max-width: 768px) {
+    .sidebar-footer {
+        position: fixed;
+        bottom: 0;
+        border-top: 1px #3d4559 solid;
+        width: 35%;
+        min-width: 300px;
+    }
 }
 
 .sidebar-footer .btn {

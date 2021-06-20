@@ -93,4 +93,13 @@ export default {
     outline: none;
     border-left: 0px;
 }
+@media (max-width: 768px) {
+    .sidebar-body {
+        position: fixed;
+        top: 165px;
+        border-top: 1px #3d4559 solid;
+        width: 35%;
+        min-width: 300px;
+    }
+}
 </style>

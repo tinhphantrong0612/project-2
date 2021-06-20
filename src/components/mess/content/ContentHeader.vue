@@ -490,6 +490,15 @@ export default {
     border-top: 0px;
     border-right: 0px;
 }
+
+@media (max-width: 768px) {
+    .content-header {
+        position: fixed;
+        top: 0;
+        width: 100%;
+    }
+}
+
 .content-header .target-contact {
     width: 4rem;
     height: 100%;

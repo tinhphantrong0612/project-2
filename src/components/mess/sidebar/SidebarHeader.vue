@@ -73,10 +73,16 @@ export default {
     border-bottom: 0px;
     border-top: 0px;
     border-left: 0px;
+    align-items: center;
 }
 
-.sidebar-header {
-    align-items: center;
+@media (max-width: 768px) {
+    .sidebar-header {
+        position: fixed;
+        top: 0;
+        width: 35%;
+        min-width: 300px;
+    }
 }
 
 .sidebar-header .user-info {

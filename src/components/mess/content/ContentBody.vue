@@ -129,6 +129,15 @@ export default {
     border-right: 0px;
 }
 
+@media (max-width: 768px) {
+    .content-body {
+        position: fixed;
+        top: 60px;
+        border-top: 1px #3d4559 solid;
+        width: 100%;
+    }
+}
+
 .file {
     height: calc(var(--vh, 1vh) * 100 - 210px);
 }
