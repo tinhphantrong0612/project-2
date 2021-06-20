@@ -28,7 +28,12 @@
                     >
                         <li class="nav-item w-50">
                             <a
-                                class="nav-link active show text-white text-center"
+                                class="
+                                    nav-link
+                                    active
+                                    show
+                                    text-white text-center
+                                "
                                 data-bs-toggle="tab"
                                 href="#signin"
                                 role="tab"
@@ -55,7 +60,14 @@
                     <div class="tab-content">
                         <div
                             id="signin"
-                            class="container tab-pane active show border-top-0 h-100"
+                            class="
+                                container
+                                tab-pane
+                                active
+                                show
+                                border-top-0
+                                h-100
+                            "
                             style="
                                 border: #3d4559 solid 1px;
                                 border-radius: 10px;
@@ -95,7 +107,9 @@
                                         @input="onInputChange()"
                                     />
                                 </div>
-                                <span class="text-danger p-1">{{ inform }}</span>
+                                <span class="text-danger p-1">{{
+                                    inform
+                                }}</span>
                                 <div class="text-center p-1 pb-2">
                                     <button
                                         type="submit"
@@ -166,11 +180,23 @@
                                     />
                                 </div>
                                 <div
-                                    class="input-group justify-content-between p-3 pt-0 pb-0 m-0"
+                                    class="
+                                        input-group
+                                        justify-content-between
+                                        p-3
+                                        pt-0
+                                        pb-0
+                                        m-0
+                                    "
                                 >
                                     <select
                                         v-model="gender"
-                                        class="form-control bg-dark text-white w-25"
+                                        class="
+                                            form-control
+                                            bg-dark
+                                            text-white
+                                            w-25
+                                        "
                                         style="
                                             box-shadow: none;
                                             outline: none;
@@ -189,7 +215,12 @@
                                     <input
                                         v-model="dateOfBirth"
                                         type="date"
-                                        class="form-control bg-dark text-white w-50"
+                                        class="
+                                            form-control
+                                            bg-dark
+                                            text-white
+                                            w-50
+                                        "
                                         style="
                                             box-shadow: none;
                                             outline: none;
@@ -199,7 +230,9 @@
                                         required
                                     />
                                 </div>
-                                <span class="text-danger p-1">{{ inform }}</span>
+                                <span class="text-danger p-1">{{
+                                    inform
+                                }}</span>
                                 <div class="text-center p-1 mb-2">
                                     <button
                                         class="btn btn-primary col-5"
@@ -237,7 +270,7 @@ export default {
             password: '',
             gender: '',
             email: '',
-            dateOfBirth: Date.now().toString(),
+            dateOfBirth: this.formatDate(Date.now()),
         }
     },
     computed: {
@@ -262,12 +295,23 @@ export default {
                 password: this.password,
                 gender: this.gender,
                 email: this.email,
-                dateOfBirth: new Date(this.dateOfBirth)
+                dateOfBirth: new Date(this.dateOfBirth),
             })
         },
         clearInformAndUpdateTitle(title) {
             this.title = title
             this.$store.dispatch('auth/clearInform')
+        },
+        formatDate(date) {
+            var d = new Date(date),
+                month = '' + (d.getMonth() + 1),
+                day = '' + d.getDate(),
+                year = d.getFullYear()
+
+            if (month.length < 2) month = '0' + month
+            if (day.length < 2) day = '0' + day
+
+            return [year, month, day].join('-')
         },
     },
 }

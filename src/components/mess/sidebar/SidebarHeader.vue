@@ -60,12 +60,6 @@ export default {
     methods: {
         onSearch(searchName) {
             this.$store.dispatch('user/search', searchName)
-            if (searchName) {
-                var groupsSearchResult = this.groups.map((group) => {
-                    return group.groupName.includes(searchName)
-                })
-                this.$store.dispatch('user/updateGroupsSearchResult', groupsSearchResult);
-            }
         },
     },
 }

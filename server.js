@@ -22,13 +22,6 @@ server.use('/group', groupRouter);
 server.use('/img', imageRouter);
 server.use('/src/assets/avatar', avatarRouter);
 
-User.updateMany({}, {
-    $set: {
-        status: 'offline',
-        socketId: ''
-    }
-})
-
 var options = {
     key: fs.readFileSync('./key.pem'),
     cert: fs.readFileSync('./cert.pem')
@@ -38,3 +31,11 @@ const https = require('https').createServer(options, server).listen(8888);
 initIo(https);
 server.io = getIo();
 console.log("Listen to 8888");
+
+setAllUserOffline = async function () {
+    await User.updateMany({}, {
+        status: 'offline',
+        socketId: ''
+    })
+}
+setAllUserOffline();
