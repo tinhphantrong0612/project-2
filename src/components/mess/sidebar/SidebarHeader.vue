@@ -35,7 +35,7 @@
                 placeholder="Search..."
                 results="5"
                 maxlength="14"
-                @input="onSearch(searchName)"
+                @keypress.enter="onSearch(searchName)"
             />
         </div>
     </div>
