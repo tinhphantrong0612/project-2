@@ -89,6 +89,7 @@
                                         required
                                         placeholder="Username"
                                         maxlength="14"
+                                        minlength="6"
                                         @input="onInputChange()"
                                     />
                                 </div>
@@ -104,6 +105,8 @@
                                         "
                                         required
                                         placeholder="Password"
+                                        maxlength="20"
+                                        minlength="6"
                                         @input="onInputChange()"
                                     />
                                 </div>
@@ -146,6 +149,7 @@
                                         required
                                         placeholder="Username"
                                         maxlength="14"
+                                        minlength="6"
                                         @input="onInputChange()"
                                     />
                                 </div>
@@ -160,6 +164,8 @@
                                             border: #3d4559 solid 1px;
                                         "
                                         required
+                                        minlength="6"
+                                        maxlength="20"
                                         placeholder="Password"
                                         @input="onInputChange()"
                                     />
@@ -280,6 +286,7 @@ export default {
     },
     methods: {
         login(loginData) {
+            if (this.username.length < 6 || this.password.length < 6) return
             this.$store.dispatch('auth/login', loginData).then((isSuccess) => {
                 if (isSuccess) {
                     this.$router.push({ path: '/' })
@@ -287,9 +294,11 @@ export default {
             })
         },
         register(registerData) {
+            if (this.username.length < 6 || this.password.length < 6) return
             this.$store.dispatch('auth/register', registerData)
         },
         onInputChange() {
+            if (this.username.length < 6 || this.password.length < 6) return
             this.$store.dispatch('auth/updateAuthenticator', {
                 username: this.username,
                 password: this.password,

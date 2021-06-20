@@ -14,4 +14,6 @@ var sessionMiddleware = expressSession({
     resave: true
 })
 
+sessionMiddleware.store = store;
+
 module.exports = sessionMiddleware;

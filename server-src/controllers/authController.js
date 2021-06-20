@@ -7,7 +7,7 @@ module.exports = {
             if (!user || user.password !== req.body.password) {
                 res.send({
                     success: false,
-                    error: "Login information is wrong!"
+                    error: "Your login information is wrong!"
                 });
             } else if (user.status === 'online') {
                 res.send({
@@ -38,14 +38,21 @@ module.exports = {
                     error: "Username existed!"
                 });
             } else {
-                const newUser = await User.createUser(req.body);
+                await User.createUser(req.body);
                 res.send({ success: true });
             }
         } catch (err) {
-            res.send({
+            console.log("Error: " + err.name);
+            if (err.name === 'ValidationError') {
+                res.send({
+                    success: false,
+                    error: "Invalid information"
+                })
+            } else res.send({
                 success: false,
                 error: "Internal Server Error!"
             });
+
         }
     },
     onLogout: async (req, res) => {

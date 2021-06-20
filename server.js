@@ -33,6 +33,7 @@ server.io = getIo();
 console.log("Listen to 8888");
 
 setAllUserOffline = async function () {
+    await sessionMiddleware.store.clear();
     await User.updateMany({}, {
         status: 'offline',
         socketId: ''
