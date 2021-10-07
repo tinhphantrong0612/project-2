@@ -9,7 +9,7 @@
     "serve": "vite preview"
   },
   "dependencies": {
-    "axios": "^0.21.1",
+    "axios": "^0.21.2",
     "bootstrap": "^5.0.0",
     "connect-mongodb-session": "^2.4.1",
     "express": "^4.17.1",
